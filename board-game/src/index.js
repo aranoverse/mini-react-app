@@ -10,29 +10,39 @@ function Square(props) {
 class Board extends React.Component {
     renderSquare(i) {
         return (<Square
+            key={i}
             value={this.props.squares[i]}
             onClick={() => this.props.onClick(i)}
         />);
     }
 
+    renderRowSquares(row) {
+        const cols = [];
+        for (let col = 0; col < 3; col++) {
+            cols.push(this.renderSquare(row * 3 + col));
+        }
+        return cols;
+    }
+
+
     render() {
-        return (<div>
-            <div className="board-row">
-                {this.renderSquare(0)}
-                {this.renderSquare(1)}
-                {this.renderSquare(2)}
+        let board = [];
+
+
+        for (let row = 0; row < 3; row++) {
+            const boardRow = (
+                <div key={row} className="board-row">
+                    {this.renderRowSquares(row)}
+                </div>
+            );
+            board.push(boardRow)
+        }
+
+        return (
+            <div>
+                {board}
             </div>
-            <div className="board-row">
-                {this.renderSquare(3)}
-                {this.renderSquare(4)}
-                {this.renderSquare(5)}
-            </div>
-            <div className="board-row">
-                {this.renderSquare(6)}
-                {this.renderSquare(7)}
-                {this.renderSquare(8)}
-            </div>
-        </div>);
+        );
     }
 }
 
@@ -106,21 +116,14 @@ class Game extends React.Component {
 
         const moves = history.map((step, move) => {
             let desc = move ? 'Go to move #' + move : 'Go to game start';
+            desc += `     row:${step.position.row} col:${step.position.col}`;
 
-            desc += `     row:${step.position.row} col:${step.position.col}`
-            return (//　<styletype="text/css">
-                //
-                // 　　.aa{font-weight:bold;}
-                //
-                // 　　</style>
+            return (
                 <HistoryItem
                     key={move}
                     onClick={() => this.handleClick(move)}
                     desc={desc}
                 />
-                // <li key={move} onMouseOver={}>
-                //     <button onClick={() => this.props.onClick(move)}>{desc}</button>
-                // </li>
             );
         });
 
