@@ -84,7 +84,10 @@ class Game extends React.Component {
         this.state = {
             history: [{
                 squares: Array(9).fill(null), position: {row: 0, col: 0}
-            }], stepNumber: 0, xIsNext: true
+            }],
+            stepNumber: 0,
+            xIsNext: true,
+            asc: true
         };
     }
 
@@ -126,7 +129,7 @@ class Game extends React.Component {
                     desc={desc}
                 />
             );
-        });
+        }).sort(this.state.asc ? (a, b) => a.key - b.key : (a, b) => b.key - a.key);
 
         let status;
         if (winner) {
@@ -145,6 +148,7 @@ class Game extends React.Component {
             <div className="game-info">
                 <div>{status}</div>
                 <ol>{moves}</ol>
+                <button onClick={() => this.setState({asc: !this.state.asc})}>{"ASC|DESC"}</button>
             </div>
         </div>);
     }
