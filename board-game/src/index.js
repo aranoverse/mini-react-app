@@ -63,7 +63,7 @@ class HistoryItem extends React.Component {
                 onMouseOver={() => this.toggleBold()}
                 onMouseLeave={() => this.toggleBold()}
                 style={bold}>
-                <button onClick={() => this.props.onClick}>
+                <button onClick={this.props.onClick}>
                     {this.props.desc}
                 </button>
             </li>
@@ -83,7 +83,7 @@ class Game extends React.Component {
         super(props);
         this.state = {
             history: [{
-                squares: Array(9).fill(null), position: {row: 1, col: 1}
+                squares: Array(9).fill(null), position: {row: 0, col: 0}
             }], stepNumber: 0, xIsNext: true
         };
     }
@@ -98,7 +98,8 @@ class Game extends React.Component {
         squares[i] = this.state.xIsNext ? "X" : "O";
         this.setState({
             history: history.concat([{
-                squares: squares, position: {row: parseInt(i / 3) + 1, col: i - 3 * parseInt(i / 3) + 1}
+                squares: squares,
+                position: {row: parseInt(i / 3) + 1, col: i - 3 * parseInt(i / 3) + 1}
             }]), stepNumber: history.length, xIsNext: !this.state.xIsNext
         });
     }
@@ -121,7 +122,7 @@ class Game extends React.Component {
             return (
                 <HistoryItem
                     key={move}
-                    onClick={() => this.handleClick(move)}
+                    onClick={() => this.jumpTo(move)}
                     desc={desc}
                 />
             );
