@@ -25,7 +25,6 @@ class Board extends React.Component {
 
     renderSquare(i) {
         const style = this.highlightStyle(i);
-        console.log("=====red", JSON.stringify(style), JSON.stringify(this.props))
         return (<Square
             key={i}
             value={this.props.squares[i]}
@@ -99,11 +98,13 @@ class Game extends React.Component {
         super(props);
         this.state = {
             history: [{
-                squares: Array(9).fill(null), position: {row: 0, col: 0}
+                squares: Array(9).fill(null),
+                position: {row: 0, col: 0}
             }],
             stepNumber: 0,
             xIsNext: true,
-            asc: true
+            asc: true,
+            filled: false
         };
     }
 
@@ -115,11 +116,22 @@ class Game extends React.Component {
             return;
         }
         squares[i] = this.state.xIsNext ? "X" : "O";
+        let filled = true;
+        for (let square of squares) {
+            console.log(square)
+            if (square === undefined || square === null) {
+                filled = false;
+                break;
+            }
+        }
         this.setState({
             history: history.concat([{
                 squares: squares,
                 position: {row: parseInt(i / 3) + 1, col: i - 3 * parseInt(i / 3) + 1}
-            }]), stepNumber: history.length, xIsNext: !this.state.xIsNext
+            }]),
+            stepNumber: history.length,
+            xIsNext: !this.state.xIsNext,
+            filled: filled
         });
     }
 
@@ -150,7 +162,8 @@ class Game extends React.Component {
         let status;
         if (winner) {
             status = "Winner: " + winner;
-            console.log(`lines: ${JSON.stringify(lines)}`)
+        } else if (!winner && this.state.filled) {
+            status = "Game ended with a draw";
         } else {
             status = "Next player: " + (this.state.xIsNext ? "X" : "O");
         }
